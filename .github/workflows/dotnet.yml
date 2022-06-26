@@ -23,7 +23,7 @@ jobs:
       run: dotnet build --no-restore
     
     - name: Test
-      run: dotnet test --collect:"XPlat Code Coverage" reportgenerator -reports:"zcoverage\**\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html
+      run: dotnet test --collect:"XPlat Code Coverage" reportgenerator -reports:"coverage\**\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html
 
 
     - name: Copy Coverage To Predictable Location
