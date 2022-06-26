@@ -21,11 +21,12 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Run API unit tests
-      run: dotnet test -c Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./api-coverage
+    
+    - name: Test
+      run: dotnet test CSharpNetcoreCodeCoverage.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
 
-    - name: Copy API Code coverage
-      run: cp api-coverage/**/coverage.cobertura.xml coverage.cobertura.xml
+    - name: Copy Coverage To Predictable Location
+      run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.2.0
@@ -38,12 +39,14 @@ jobs:
         hide_complexity: true
         indicators: true
         output: both
-        thresholds: '70 85'
-    - name: Upload API code coverage
-      if: always()
-      uses: actions/upload-artifact@v2
+        thresholds: '60 80'
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
       with:
-        name: 'api code coverage'
+        recreate: true
+        path: code-coverage-results.md
         
 #     - name: Test
 #       run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  
