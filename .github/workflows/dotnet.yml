@@ -22,8 +22,8 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test /p:CollectCoverage=true /p:CoverletOutput=BuildReports/Coverage/ /p:CoverletOutputFormat=lcov --no-restore  
+      run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  
     - name: Codecov
       uses: codecov/codecov-action@v1
-      with:
-        directory: BuildReports/Coverage/
+#       with:
+#         directory: BuildReports/Coverage/
