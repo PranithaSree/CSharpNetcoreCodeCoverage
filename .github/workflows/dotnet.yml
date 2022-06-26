@@ -22,4 +22,23 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test /p:CollectCoverage=true /p:CoverletOutput=BuildReports/Coverage/ /p:CoverletOutputFormat=lcov --no-restore
+      run: dotnet test /p:CollectCoverage=true /p:CoverletOutput=BuildReports/Coverage/ /p:CoverletOutputFormat=lcov --no-restore    
+      
+    - name: Test 2
+      run: dotnet test -c Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./api-coverage
+      
+    - name: Copy APi Code coverage
+      run: cp api-coverage/**/coverage.cobertura.xml coverage.cobertura.xml
+
+    - name: Code Coverage Summary Report
+      uses: irongut/CodeCoverageSummary@v1.2.0
+      with:
+        filename: coverage.cobertura.xml
+        badge: true
+        fail_below_min: true
+        format: markdown
+        hide_branch_rate: false
+        hide_complexity: true
+        indicators: true
+        output: both
+        thresholds: '70 85'
