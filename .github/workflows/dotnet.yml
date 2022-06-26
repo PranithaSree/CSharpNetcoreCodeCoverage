@@ -39,6 +39,11 @@ jobs:
         indicators: true
         output: both
         thresholds: '70 85'
+    - name: Upload API code coverage
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'api code coverage'
+        
 #     - name: Test
 #       run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  
 #     - name: Codecov
