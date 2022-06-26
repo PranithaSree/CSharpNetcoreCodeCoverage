@@ -23,8 +23,7 @@ jobs:
       run: dotnet build --no-restore
     
     - name: Test
-      run: dotnet test --collect:"XPlat Code Coverage" reportgenerator -reports:"coverage\**\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html
-
+      run: dotnet test --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
 
     - name: Copy Coverage To Predictable Location
       run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
@@ -38,7 +37,7 @@ jobs:
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.2.0
       with:
-        filename: coverage/**/coverage.cobertura.xml
+        filename: coverage.cobertura.xml
         badge: true
         fail_below_min: true
         format: markdown
