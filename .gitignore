@@ -5,3 +5,5 @@
 /.vs/*
 /Application/obj/*
 /Application.UnitTests/obj/*
+/Application.UnitTests/bin/*
+/coverage/*
