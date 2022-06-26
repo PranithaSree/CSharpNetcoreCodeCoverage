@@ -23,11 +23,13 @@ jobs:
       run: dotnet build --no-restore
     
     - name: Test
-      run: dotnet test --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+      run: dotnet test --collect:"XPlat Code Coverage" reportgenerator -reports:"zcoverage\**\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html
+
 
     - name: Copy Coverage To Predictable Location
       run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
     - name: Upload API code coverage
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: 'api code coverage'
