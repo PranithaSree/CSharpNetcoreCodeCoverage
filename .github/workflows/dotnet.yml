@@ -40,6 +40,7 @@ jobs:
         output: both
         thresholds: '70 85'
     - name: Upload API code coverage
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: 'api code coverage'
