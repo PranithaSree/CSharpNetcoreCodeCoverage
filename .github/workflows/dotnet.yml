@@ -27,6 +27,11 @@ jobs:
 
     - name: Copy Coverage To Predictable Location
       run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
+    - name: Upload API code coverage
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'api code coverage'
+        path: coverage/**/coverage.cobertura.xml
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.2.0
