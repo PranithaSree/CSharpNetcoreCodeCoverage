@@ -23,11 +23,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Run API unit tests
       run: dotnet test -c Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./api-coverage
-      working-directory: Softcat.CMP.Service.Api.Unit.Tests/
 
-    - name: Copy APi Code coverage
+    - name: Copy API Code coverage
       run: cp api-coverage/**/coverage.cobertura.xml coverage.cobertura.xml
-      working-directory: Softcat.CMP.Service.Api.Unit.Tests/
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.2.0
