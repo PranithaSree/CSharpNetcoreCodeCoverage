@@ -35,7 +35,7 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: build
     environment:
       name: 'Production'
@@ -56,6 +56,15 @@ jobs:
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1385324AD59E4993861F54CB49B0C2BA }}
           package: .
       
+      - name: Install Azure CLI Latest
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.azure_credentials }} 
+          allow-no-subscriptions: true
+
       - name: Azure App Service Settings
         uses: Azure/appservice-settings@v1
         with:
