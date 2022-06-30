@@ -4,6 +4,8 @@
 
 /.vs/*
 /Application/obj/*
+/Application/bin/*
 /Application.UnitTests/obj/*
 /Application.UnitTests/bin/*
 /coverage/*
+/coveragereport/*

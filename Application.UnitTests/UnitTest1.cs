@@ -21,5 +21,11 @@ namespace Application.UnitTests
         {
             Assert.Equal("TEST", _dummyClass.DummyMethodString());
         }
+
+        [Fact]
+        public void Test3()
+        {
+            Assert.NotEqual("TEST2", _dummyClass.DummyMethodString());
+        }
     }
 }

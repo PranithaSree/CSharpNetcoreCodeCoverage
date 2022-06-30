@@ -27,12 +27,13 @@ jobs:
 
     - name: Copy Coverage To Predictable Location
       run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
+
     - name: Upload API code coverage
       if: always()
       uses: actions/upload-artifact@v2
       with:
         name: 'api code coverage'
-        path: coverage/**/coverage.cobertura.xml
+        path: coverage.cobertura.xml
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.2.0
@@ -48,15 +49,64 @@ jobs:
         thresholds: '60 80'
 
     - name: Add Coverage PR Comment
-      if: github.event_name == 'pull_request'
       uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
       with:
         recreate: true
         path: code-coverage-results.md
-        
-#     - name: Test
-#       run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  
-#     - name: Codecov
-#       uses: codecov/codecov-action@v1
-#       with:
-#         directory: BuildReports/Coverage/
+
+    - name: Report Generator
+      if: always()
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.1.9
+      with:
+        reports: 'coverage.cobertura.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
+        targetdir: 'coveragereport' 
+        reporttypes: 'HtmlInline;Cobertura' # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, Html_Dark, Html_Light, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
+        sourcedirs: '' 
+        historydir: ''
+        plugins: ''
+        assemblyfilters: '+*'
+        classfilters: '+*'
+        filefilters: '+*'
+        verbosity: 'Info' # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
+        title: 'CSharpNetcore Code coverage' # Optional title.
+        tag: '${{ github.run_number }}_${{ github.run_id }}' # Optional tag or build version.
+        license: '' # Optional license for PRO version. Get your license here: https://reportgenerator.io/pro
+        customSettings: '' # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings.
+        toolpath: 'reportgeneratortool' # Default directory for installing the dotnet tool.
+    
+    - name: Upload coverage report artifact
+      if: always()
+      uses: actions/upload-artifact@v2.2.3
+      with:
+        name: CoverageReport    
+        path: coveragereport
+
+    - name: Publish API project
+      run: dotnet publish CSharpNetcoreCodeCoverage/CSharpNetcoreCodeCoverage.csproj -c Release -o ${{env.DOTNET_ROOT}}/api
+
+    - name: Upload API artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: api-artifact
+        path: ${{env.DOTNET_ROOT}}/api
+
+  deploy: 
+    runs-on:  ubuntu-latest
+    needs: build
+    environment:
+      name: 'development'
+      url: ${{steps.deploy-to-webapp.outputs.webapp-url}}
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: api-artifact
+
+      - name: Deploy to Azure App Service
+        id: deploy-api
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: play-appsettings
+          publish-profile: ${{secrets.AZURE_WEBAPP_PUBLISH_PROFILE}}
+          package: .
