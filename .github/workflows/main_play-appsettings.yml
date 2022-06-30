@@ -55,3 +55,16 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1385324AD59E4993861F54CB49B0C2BA }}
           package: .
+      
+      - name: Azure App Service Settings
+        uses: Azure/appservice-settings@v1
+        with:
+          app-name: 'play-appsettings' # Name of the Azure Web App
+          app-settings-json: |
+            [
+              { 
+                "name": "UI:Index:Header",
+                "value": "bannanananann",
+                "slotSetting": false
+              }
+            ]
