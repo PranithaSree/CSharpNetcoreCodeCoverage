@@ -62,7 +62,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.azure_credentials }} 
+          creds: ${{ secrets.AZURE_CREDENTIALS }} 
           allow-no-subscriptions: true
 
       - name: Azure App Service Settings
