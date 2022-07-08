@@ -17,42 +17,60 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.azure_credentials }} 
+        allow-no-subscriptions: true
+
+    - name: Azure App Service Settings
+      uses: Azure/appservice-settings@v1
+      with:
+        app-name: ${{secrets.APP_NAME}}
+        app-settings-json: |
+          [
+            { 
+              "name": "UI_Index_Header",
+              "value": "bannanananann",
+              "slotSetting": false
+            }
+          ]
+#     - name: Restore dependencies
+#       run: dotnet restore
+#     - name: Build
+#       run: dotnet build --no-restore
     
-    - name: Test
-      run: dotnet test --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+#     - name: Test
+#       run: dotnet test --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
 
-    - name: Copy Coverage To Predictable Location
-      run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
-    - name: Upload API code coverage
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'api code coverage'
-        path: coverage/**/coverage.cobertura.xml
+#     - name: Copy Coverage To Predictable Location
+#       run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
+#     - name: Upload API code coverage
+#       if: always()
+#       uses: actions/upload-artifact@v2
+#       with:
+#         name: 'api code coverage'
+#         path: coverage/**/coverage.cobertura.xml
 
-    - name: Code Coverage Summary Report
-      uses: irongut/CodeCoverageSummary@v1.2.0
-      with:
-        filename: coverage.cobertura.xml
-        badge: true
-        fail_below_min: true
-        format: markdown
-        hide_branch_rate: false
-        hide_complexity: true
-        indicators: true
-        output: both
-        thresholds: '60 80'
+#     - name: Code Coverage Summary Report
+#       uses: irongut/CodeCoverageSummary@v1.2.0
+#       with:
+#         filename: coverage.cobertura.xml
+#         badge: true
+#         fail_below_min: true
+#         format: markdown
+#         hide_branch_rate: false
+#         hide_complexity: true
+#         indicators: true
+#         output: both
+#         thresholds: '60 80'
 
-    - name: Add Coverage PR Comment
-      if: github.event_name == 'pull_request'
-      uses: marocchino/sticky-pull-request-comment@v2
-      with:
-        recreate: true
-        path: code-coverage-results.md
+#     - name: Add Coverage PR Comment
+#       if: github.event_name == 'pull_request'
+#       uses: marocchino/sticky-pull-request-comment@v2
+#       with:
+#         recreate: true
+#         path: code-coverage-results.md
         
 #     - name: Test
 #       run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  
