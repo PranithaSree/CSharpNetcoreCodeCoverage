@@ -6,7 +6,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - play-appsettings
 on:
   push:
     branches:
-      - main
+      - mainn
   workflow_dispatch:
 
 jobs:
