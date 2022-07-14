@@ -24,6 +24,7 @@ jobs:
         allow-no-subscriptions: true
 
     - name: Azure App Service Settings
+      if: false 
       uses: Azure/appservice-settings@v1
       with:
         app-name: ${{secrets.APP_NAME}}
@@ -41,8 +42,8 @@ jobs:
         |
         sudo apt install software-properties-common apt-transport-https wget
         wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
-        sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/"
-        sudo apt install microsoft-edge-stable_103*
+        sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/edge pool main m microsoft-edge-stable"
+        sudo apt install microsoft-edge-stable_103.0.1264.51-1_amd64.deb
 
     - name: Setup Chrome
       run:
