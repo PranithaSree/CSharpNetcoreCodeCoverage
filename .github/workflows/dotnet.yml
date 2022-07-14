@@ -58,6 +58,10 @@ jobs:
         sudo apt-add-repository "deb http://ppa.launchpad.net/ubuntu-mozilla-security/ppa/ubuntu bionic main"
         sudo apt-get update
         sudo apt-get install firefox
+    - name: Run a multi-line script
+      run: |
+        echo Add other actions to build,
+        echo test, and deploy your project
 #     - name: Restore dependencies
 #       run: dotnet restore
 #     - name: Build
