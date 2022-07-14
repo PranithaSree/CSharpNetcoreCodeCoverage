@@ -35,6 +35,29 @@ jobs:
               "slotSetting": false
             }
           ]
+      
+    - name: Setup Edge
+      run:
+        |
+        sudo apt install software-properties-common apt-transport-https wget
+        wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main"
+        sudo apt install microsoft-edge-dev
+
+    - name: Setup Chrome
+      run:
+        |
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        echo Install: Chrome
+        sudo dpkg --install google-chrome-stable_current_amd64.deb
+
+    - name: Setup firefox
+      run:
+        |
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6DCF7707EBC211F
+        sudo apt-add-repository "deb http://ppa.launchpad.net/ubuntu-mozilla-security/ppa/ubuntu bionic main"
+        sudo apt-get update
+        sudo apt-get install firefox
 #     - name: Restore dependencies
 #       run: dotnet restore
 #     - name: Build
